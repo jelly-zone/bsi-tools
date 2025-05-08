@@ -10,7 +10,7 @@ import HomePage from "@/components/HomePage.vue";
 
 const routes = [
     // { path: '/', component}
-    { path: '/', componrnt: HomePage },
+    { path: '/', component: HomePage },
     { path: '/expRecords', component: ExpRecords },
 ]
 
