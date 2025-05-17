@@ -1,17 +1,13 @@
 import { createWebHashHistory, createRouter } from "vue-router";
 import ExpRecords from "@/components/ExpRecords.vue";
-// import App from "@/App.vue";
-import HomePage from "@/components/HomePage.vue";
-
-// const constantRoutes = [{
-//     path: '/:catchAll(.*)',
-//     component: () => import('@/views/error/404.vue')
-// }]
+// import HomePage from "@/components/HomePage.vue";
+import ThreeDCharts from "../components/ThreeDCharts.vue";
 
 const routes = [
-    // { path: '/', component}
-    { path: '/', component: HomePage },
+    { path: '/', component: ThreeDCharts },
+    // { path: '/', component: HomePage },
     { path: '/expRecords', component: ExpRecords },
+    // { path: '/expRecords', component: ExpRecords },
 ]
 
 const router = createRouter({
