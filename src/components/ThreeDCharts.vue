@@ -1,4 +1,31 @@
 <template>
+<div class="page">
+    <h1 class="line-title">V1.0电极</h1>
+    <div class="charts-line-box">
+        <div class="charts-col-box" style="width: 30%;">
+            <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-l"></div>
+        </div>
+        <div class="charts-col-box" style="width: 30%;">
+            <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-m"></div>
+        </div>
+        <div class="charts-col-box" style="width: 30%;">
+            <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-s"></div>
+        </div>
+    </div>
+    <h1 class="line-title">V1.1电极</h1>
+    <div class="line-title">--------待补充--------</div>
+    <h1 class="line-title">美敦力电极</h1>
+    <div class="charts-line-box">
+        <div class="charts-col-box" style="width: 30%;">
+            <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-l-mdt"></div>
+        </div>
+        <div class="charts-col-box" style="width: 30%;">
+            <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-m-mdt"></div>
+        </div>
+        <div class="charts-col-box" style="width: 30%;">
+            <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-s-mdt"></div>
+        </div>
+    </div>
     <div class="charts-line-box">
         <div class="charts-col-box">
             <div>
@@ -69,6 +96,7 @@
             <div style="width: 500px;height:1000px;" class="single-chart-box" id="myChart-3"></div>
         </div>
     </div>
+</div>
 </template>
 
 <script setup>
@@ -79,8 +107,18 @@ import { nerverootsOpinionMNew, nerverootsOpinionOne, nerverootsOpinionL, nerver
     msV10_L_one,
     msV10_M_one,
     msV10_S_one,
+    nerverootsOpinionM2D, nerverootsOpinionL2D, nerverootsOpinionS2D,
+    nerverootsOpinionM2DMdt,
+	nerverootsOpinionL2DMdt,
+	nerverootsOpinionS2DMdt,
  } from '../nerverootsData.js'
 
+var twoOpinionM = ref(nerverootsOpinionM2D)
+var twoOpinionL = ref(nerverootsOpinionL2D)
+var twoOpinionS = ref(nerverootsOpinionS2D)
+var twoOpinionMMdt = ref(nerverootsOpinionM2DMdt)
+var twoOpinionLMdt = ref(nerverootsOpinionL2DMdt)
+var twoOpinionSMdt = ref(nerverootsOpinionS2DMdt)
 var threeOpinionOne = ref(nerverootsOpinionMNew)
 var threeOpinionL = ref(nerverootsOpinionL)
 var threeOpinionM = ref(nerverootsOpinionM)
@@ -275,22 +313,46 @@ function selectElectrode3(str) {
 }
 
 onUpdated(() => {
+    myChart2DM.setOption(twoOpinionM.value)
+    myChart2DL.setOption(twoOpinionL.value)
+    myChart2DS.setOption(twoOpinionS.value)
+    myChart2DMMdt.setOption(twoOpinionMMdt.value)
+    myChart2DLMdt.setOption(twoOpinionLMdt.value)
+    myChart2DSMdt.setOption(twoOpinionSMdt.value)
     myChart0.setOption(threeOpinionOne.value);
     myChart1.setOption(threeOpinionL.value);
     myChart2.setOption(threeOpinionM.value);
     myChart3.setOption(threeOpinionS.value);
 })
 
+var myChart2DL = null
+var myChart2DM = null
+var myChart2DS = null
+var myChart2DLMdt = null
+var myChart2DMMdt = null
+var myChart2DSMdt = null
 var myChart0 = null
 var myChart1 = null
 var myChart2 = null
 var myChart3 = null
 
 onMounted(() => {
+    myChart2DM = echarts.init(document.getElementById('myChart-2d-m'));
+    myChart2DL = echarts.init(document.getElementById('myChart-2d-l'));
+    myChart2DS = echarts.init(document.getElementById('myChart-2d-s'));
+    myChart2DMMdt = echarts.init(document.getElementById('myChart-2d-m-mdt'));
+    myChart2DLMdt = echarts.init(document.getElementById('myChart-2d-l-mdt'));
+    myChart2DSMdt = echarts.init(document.getElementById('myChart-2d-s-mdt'));
     myChart0 = echarts.init(document.getElementById('myChart-0'));
     myChart1 = echarts.init(document.getElementById('myChart-1'));
     myChart2 = echarts.init(document.getElementById('myChart-2'));
     myChart3 = echarts.init(document.getElementById('myChart-3'));
+    myChart2DM.setOption(twoOpinionM.value)
+    myChart2DL.setOption(twoOpinionL.value)
+    myChart2DS.setOption(twoOpinionS.value)
+    myChart2DMMdt.setOption(twoOpinionMMdt.value)
+    myChart2DLMdt.setOption(twoOpinionLMdt.value)
+    myChart2DSMdt.setOption(twoOpinionSMdt.value)
     myChart0.setOption(threeOpinionOne.value);
     myChart1.setOption(threeOpinionL.value);
     myChart2.setOption(threeOpinionM.value);
@@ -300,14 +362,22 @@ onMounted(() => {
 </script>
 
 <style lang="less">
-.charts-line-box {
-    margin-top: 20px;
-    display: flex;
-    .single-chart-box {
-        margin-top: 10px;
+.page {
+    width: 100%;
+    .line-title {
+        height: 20px;
+        text-align: center;
     }
-    // .charts-col-box {
-    //     display: flex;
-    // }
+    .charts-line-box {
+        margin-left: 20px;
+        margin-top: 20px;
+        display: flex;
+        .single-chart-box {
+            margin-top: 10px;
+        }
+        .charts-col-box {
+            margin-right: 60px;
+        }
+    }
 }
 </style>

@@ -1,9 +1,30 @@
+// 标准化方法 & echarts方案配置 & 电极位置
+
 import BSI002_TRANSFORMED from './processedMrkData/bsi002_trans'
 import BSI008_TRANSFORMED from './processedMrkData/bsi008_trans'
 import BSI009_TRANSFORMED from './processedMrkData/bsi009_trans'
 import BSI010_TRANSFORMED from './processedMrkData/bsi010_trans'
 import BSI012_TRANSFORMED from './processedMrkData/bsi012_trans'
-import { STANDARD_M } from './preparedData/bsi_positions'
+import { STANDARD_M, STANDARD_L, STANDARD_S } from './preparedData/bsi_positions'
+import { STANDARD_M_2D, STANDARD_L_2D, STANDARD_S_2D } from './preparedData/bsi_positions'
+import { color } from 'echarts'
+
+
+// 纵轴最大值 = 0
+const round = (number, precision) => {
+  return Math.round(+number + "e" + precision) / Math.pow(10, precision);
+  //same as:
+  //return Number(Math.round(+number + 'e' + precision) + 'e-' + precision);
+}
+var standardizeToMinus = (arr) => {
+	let len = 0
+	let newArr = []
+	arr.forEach(ele => {
+		len = ele.length
+		newArr.push([ele[0], round(ele[len-1] - 36.61, 2)])
+	});
+	return newArr
+}
 
 const colors = [
     '#87f0e5',
@@ -111,6 +132,25 @@ const medtronic565_one = [
     [1, 2.5, -1.39]
 ]
 
+const medtronic565_2d = [
+    [-2.5, 36.61],
+    [-2.5, 27.11],
+    [-2.5, 17.61],
+    [-2.5, 8.11],
+    [-2.5, -1.39],
+    [0, 41.36],
+    [0, 31.86],
+    [0, 22.36],
+    [0, 12.86],
+    [0, 3.36],
+    [0, -6.14],
+    [2.5, 36.61],
+    [2.5, 27.11],
+    [2.5, 17.61],
+    [2.5, 8.11],
+    [2.5, -1.39]
+]
+
 const msV10_L_one = [
     [1, -4, 36.61],
     [1, -4, 23.61],
@@ -120,7 +160,7 @@ const msV10_L_one = [
     [1, -2.85, -24.89],
     [1, 0, 31.11],
     [1, 0, 17.11],
-    [1, 0, -8.14],
+    [1, 0, 4.36],
     [1, 0, -19.39],
     [1, 4, 36.61],
     [1, 4, 23.61],
@@ -128,6 +168,25 @@ const msV10_L_one = [
     [1, 4, -1.89],
     [1, 4, -13.89],
 	[1, 2.85, -24.89],
+]
+
+const msV10_L_2d = [
+    [-4, 36.61],
+    [-4, 23.61],
+    [-4, 10.61],
+    [-4, -1.89],
+    [-4, -13.89],
+    [-2.85, -24.89],
+    [0, 31.11],
+    [0, 17.11],
+    [0, 4.36],
+    [0, -19.39],
+    [4, 36.61],
+    [4, 23.61],
+    [4, 10.61],
+    [4, -1.89],
+    [4, -13.89],
+	[2.85, -24.89],
 ]
 
 const msV10_M_one = [
@@ -139,7 +198,7 @@ const msV10_M_one = [
     [1, -2.85, -14.89],
     [1, 0, 31.11],
     [1, 0, 20.11],
-    [1, 0, -1.14],
+    [1, 0, 9.36],
     [1, 0, -10.39],
     [1, 4, 36.61],
     [1, 4, 25.61],
@@ -147,6 +206,25 @@ const msV10_M_one = [
     [1, 4, 4.11],
     [1, 4, -5.89],
 	[1, 2.85, -14.89],
+]
+
+const msV10_M_2d = [
+    [-4, 36.61],
+    [-4, 25.61],
+    [-4, 14.61],
+    [-4, 4.11],
+    [-4, -5.89],
+    [-2.85, -14.89],
+    [0, 31.11],
+    [0, 20.11],
+    [0, 9.36],
+    [0, -10.39],
+    [4, 36.61],
+    [4, 25.61],
+    [4, 14.61],
+    [4, 4.11],
+    [4, -5.89],
+	[2.85, -14.89],
 ]
 
 const msV10_S_one = [
@@ -158,7 +236,7 @@ const msV10_S_one = [
     [1, -2.85, -4.89],
     [1, 0, 32.11],
     [1, 0, 23.11],
-    [1, 0, 5.86],
+    [1, 0, 14.36],
     [1, 0, -1.39],
     [1, 4, 36.61],
     [1, 4, 27.61],
@@ -167,6 +245,2429 @@ const msV10_S_one = [
     [1, 4, 2.11],
 	[1, 2.85, -4.89],
 ]
+
+const msV10_S_2d = [
+    [-4, 36.61],
+    [-4, 27.61],
+    [-4, 18.61],
+    [-4, 10.11],
+    [-4, 2.11],
+    [-2.85, -4.89],
+    [0, 32.11],
+    [0, 23.11],
+    [0, 14.36],
+    [0, -1.39],
+    [4, 36.61],
+    [4, 27.61],
+    [4, 18.61],
+    [4, 10.11],
+    [4, 2.11],
+	[2.85, -4.89],
+]
+
+// 2D版M类按节段
+var nerverootsOpinionM2D = {
+	title: {
+	text: 'M类神经根进入点',
+	subtext: 'N=5'
+	},
+	grid: {
+	left: '3%',
+	right: '7%',
+	bottom: '7%',
+	containLabel: true
+	},
+	tooltip: {
+	// trigger: 'axis',
+	showDelay: 0,
+	formatter: function (params) {
+		if (params.value.length > 1) {
+		return (
+			params.seriesName +
+			' :<br/>' +
+			params.value[0] +
+			'mm ' +
+			params.value[1] +
+			'mm '
+		);
+		} else {
+		return (
+			params.seriesName +
+			' :<br/>' +
+			params.name +
+			' : ' +
+			params.value +
+			'mm '
+		);
+		}
+	},
+	axisPointer: {
+		show: true,
+		type: 'cross',
+		lineStyle: {
+		type: 'dashed',
+		width: 1
+		}
+	}
+	},
+	toolbox: {
+	feature: {
+		dataZoom: {},
+		brush: {
+		type: ['rect', 'polygon', 'clear']
+		}
+	}
+	},
+	brush: {},
+	legend: {
+	data: ['L1', 'L2', 'L3', 'L4', 'L5', 'S1', 'S2'],
+	left: 'center',
+	bottom: 10
+	},
+	xAxis: [
+	{
+		type: 'value',
+		scale: true,
+		min: -6,
+		max: 6,
+		axisLabel: {
+			formatter: '{value} mm'
+		},
+		splitLine: {
+			show: false
+		}
+	}
+	],
+	yAxis: [
+	{
+		type: 'value',
+		scale: true,
+		min: -70,
+		max: 0,
+		axisLabel: {
+			formatter: '{value} mm'
+		},
+		splitLine: {
+			show: false
+		}
+	}
+	],
+	series: [
+	{
+		name: 'Electrode',
+		type: 'scatter',
+		symbolSize: [19, 50], //点的大小
+		symbol: 'rect',
+		//   color: colors[1],
+		emphasis: {
+			focus: 'series'
+		},
+		itemStyle: {
+			color: 'blue',
+		},
+		// prettier-ignore
+		data: standardizeToMinus(msV10_M_2d),
+	},
+	{
+		name: 'L1',
+		type: 'scatter',
+	//   color: colors[0],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_M_2D['L1']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L1 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	// 	color: colors[0],
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'AVG' }, { xAxis: 160 }]
+		}
+	},
+	{
+		name: 'L2',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_M_2D['L2']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L2 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L3',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_M_2D['L3']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L3 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L4',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_M_2D['L4']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L4 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L5',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_M_2D['L5']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L5 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'S1',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_M_2D['S1']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'S1 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'S2',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_M_2D['S2']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'S2 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	]
+}
+// 2D版L类按节段
+var nerverootsOpinionL2D = {
+	title: {
+	text: 'L类神经根进入点',
+	subtext: 'N=5'
+	},
+	grid: {
+	left: '3%',
+	right: '7%',
+	bottom: '7%',
+	containLabel: true
+	},
+	tooltip: {
+	// trigger: 'axis',
+	showDelay: 0,
+	formatter: function (params) {
+		if (params.value.length > 1) {
+		return (
+			params.seriesName +
+			' :<br/>' +
+			params.value[0] +
+			'mm ' +
+			params.value[1] +
+			'mm '
+		);
+		} else {
+		return (
+			params.seriesName +
+			' :<br/>' +
+			params.name +
+			' : ' +
+			params.value +
+			'mm '
+		);
+		}
+	},
+	axisPointer: {
+		show: true,
+		type: 'cross',
+		lineStyle: {
+		type: 'dashed',
+		width: 1
+		}
+	}
+	},
+	toolbox: {
+	feature: {
+		dataZoom: {},
+		brush: {
+		type: ['rect', 'polygon', 'clear']
+		}
+	}
+	},
+	brush: {},
+	legend: {
+	data: ['L1', 'L2', 'L3', 'L4', 'L5', 'S1', 'S2'],
+	left: 'center',
+	bottom: 10
+	},
+	xAxis: [
+	{
+		type: 'value',
+		scale: true,
+		min: -6,
+		max: 6,
+		axisLabel: {
+			formatter: '{value} mm'
+		},
+		splitLine: {
+			show: false
+		}
+	}
+	],
+	yAxis: [
+	{
+		type: 'value',
+		scale: true,
+		min: -70,
+		max: 0,
+		axisLabel: {
+			formatter: '{value} mm'
+		},
+		splitLine: {
+			show: false
+		}
+	}
+	],
+	series: [
+	{
+		name: 'Electrode',
+		type: 'scatter',
+		symbolSize: [19, 50], //点的大小
+		symbol: 'rect',
+		//   color: colors[1],
+		emphasis: {
+			focus: 'series'
+		},
+		itemStyle: {
+			color: 'blue',
+		},
+		// prettier-ignore
+		data: standardizeToMinus(msV10_L_2d),
+	},
+	{
+		name: 'L1',
+		type: 'scatter',
+	//   color: colors[0],
+		emphasis: {
+			focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_L_2D['L1']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L1 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	// 	color: colors[0],
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'AVG' }, { xAxis: 160 }]
+		}
+	},
+	{
+		name: 'L2',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_L_2D['L2']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L2 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L3',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_L_2D['L3']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L3 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L4',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_L_2D['L4']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L4 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L5',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_L_2D['L5']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L5 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'S1',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_L_2D['S1']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'S1 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'S2',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_L_2D['S2']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'S2 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	]
+}
+
+// 2D版S类按节段
+var nerverootsOpinionS2D = {
+	title: {
+	text: 'S类神经根进入点',
+	subtext: 'N=5'
+	},
+	grid: {
+		show: true,
+		left: '3%',
+		right: '7%',
+		bottom: '7%',
+		containLabel: true
+	},
+	tooltip: {
+	// trigger: 'axis',
+	showDelay: 0,
+	formatter: function (params) {
+		if (params.value.length > 1) {
+		return (
+			params.seriesName +
+			' :<br/>' +
+			params.value[0] +
+			'mm ' +
+			params.value[1] +
+			'mm '
+		);
+		} else {
+		return (
+			params.seriesName +
+			' :<br/>' +
+			params.name +
+			' : ' +
+			params.value +
+			'mm '
+		);
+		}
+	},
+	axisPointer: {
+		show: true,
+		type: 'cross',
+		lineStyle: {
+		type: 'dashed',
+		width: 1
+		}
+	}
+	},
+	toolbox: {
+	feature: {
+		dataZoom: {},
+		brush: {
+		type: ['rect', 'polygon', 'clear']
+		}
+	}
+	},
+	brush: {},
+	legend: {
+	data: ['L1', 'L2', 'L3', 'L4', 'L5', 'S1', 'S2'],
+	left: 'center',
+	bottom: 10
+	},
+	xAxis: [
+	{
+		type: 'value',
+		scale: true,
+		min: -6,
+		max: 6,
+		axisLabel: {
+			formatter: '{value} mm'
+		},
+		axisLine: {
+			show: true
+		},
+		splitLine: {
+			show: false
+		}
+	}
+	],
+	yAxis: [
+	{
+		interval: 10,
+		position: 'left',
+		type: 'value',
+		scale: true,
+		min: -70,
+		max: 0,
+		axisLabel: {
+			formatter: '{value} mm',
+		},
+		axisLine: {
+			show: true
+		},
+		splitLine: {
+			show: false
+		},
+		axisTick: {
+			interval: 10,
+			show: true
+		}
+	}
+	],
+	series: [
+	{
+		name: 'Electrode',
+		type: 'scatter',
+		symbolSize: [19, 50], //点的大小
+		symbol: 'rect',
+		//   color: colors[1],
+		emphasis: {
+			focus: 'series'
+		},
+		itemStyle: {
+			color: 'blue',
+		},
+		// prettier-ignore
+		data: standardizeToMinus(msV10_S_2d),
+	},
+	{
+		name: 'L1',
+		type: 'scatter',
+	//   color: colors[0],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_S_2D['L1']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L1 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'AVG' }, { xAxis: 160 }]
+		}
+	},
+	{
+		name: 'L2',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_S_2D['L2']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L2 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L3',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_S_2D['L3']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L3 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L4',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_S_2D['L4']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L4 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L5',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_S_2D['L5']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L5 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'S1',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_S_2D['S1']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'S1 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'S2',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_S_2D['S2']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'S2 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	]
+}
+
+// 2D版M类按节段 with medtronic
+var nerverootsOpinionM2DMdt = {
+	title: {
+	text: 'M类神经根进入点',
+	subtext: 'N=5'
+	},
+	grid: {
+	left: '3%',
+	right: '7%',
+	bottom: '7%',
+	containLabel: true
+	},
+	tooltip: {
+	// trigger: 'axis',
+	showDelay: 0,
+	formatter: function (params) {
+		if (params.value.length > 1) {
+		return (
+			params.seriesName +
+			' :<br/>' +
+			params.value[0] +
+			'mm ' +
+			params.value[1] +
+			'mm '
+		);
+		} else {
+		return (
+			params.seriesName +
+			' :<br/>' +
+			params.name +
+			' : ' +
+			params.value +
+			'mm '
+		);
+		}
+	},
+	axisPointer: {
+		show: true,
+		type: 'cross',
+		lineStyle: {
+		type: 'dashed',
+		width: 1
+		}
+	}
+	},
+	toolbox: {
+	feature: {
+		dataZoom: {},
+		brush: {
+		type: ['rect', 'polygon', 'clear']
+		}
+	}
+	},
+	brush: {},
+	legend: {
+	data: ['L1', 'L2', 'L3', 'L4', 'L5', 'S1', 'S2'],
+	left: 'center',
+	bottom: 10
+	},
+	xAxis: [
+	{
+		type: 'value',
+		scale: true,
+		min: -6,
+		max: 6,
+		axisLabel: {
+			formatter: '{value} mm'
+		},
+		splitLine: {
+			show: false
+		}
+	}
+	],
+	yAxis: [
+	{
+		type: 'value',
+		scale: true,
+		min: -70,
+		max: 0,
+		axisLabel: {
+			formatter: '{value} mm'
+		},
+		splitLine: {
+			show: false
+		}
+	}
+	],
+	series: [
+	{
+		name: 'Electrode',
+		type: 'scatter',
+		symbolSize: [19, 50], //点的大小
+		symbol: 'rect',
+		//   color: colors[1],
+		emphasis: {
+			focus: 'series'
+		},
+		itemStyle: {
+			color: 'blue',
+		},
+		// prettier-ignore
+		data: standardizeToMinus(medtronic565_2d),
+	},
+	{
+		name: 'L1',
+		type: 'scatter',
+	//   color: colors[0],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_M_2D['L1']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L1 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	// 	color: colors[0],
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'AVG' }, { xAxis: 160 }]
+		}
+	},
+	{
+		name: 'L2',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_M_2D['L2']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L2 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L3',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_M_2D['L3']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L3 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L4',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_M_2D['L4']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L4 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L5',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_M_2D['L5']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L5 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'S1',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_M_2D['S1']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'S1 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'S2',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_M_2D['S2']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'S2 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	]
+}
+// 2D版L类按节段 with medtronic
+var nerverootsOpinionL2DMdt = {
+	title: {
+	text: 'L类神经根进入点',
+	subtext: 'N=5'
+	},
+	grid: {
+	left: '3%',
+	right: '7%',
+	bottom: '7%',
+	containLabel: true
+	},
+	tooltip: {
+	// trigger: 'axis',
+	showDelay: 0,
+	formatter: function (params) {
+		if (params.value.length > 1) {
+		return (
+			params.seriesName +
+			' :<br/>' +
+			params.value[0] +
+			'mm ' +
+			params.value[1] +
+			'mm '
+		);
+		} else {
+		return (
+			params.seriesName +
+			' :<br/>' +
+			params.name +
+			' : ' +
+			params.value +
+			'mm '
+		);
+		}
+	},
+	axisPointer: {
+		show: true,
+		type: 'cross',
+		lineStyle: {
+		type: 'dashed',
+		width: 1
+		}
+	}
+	},
+	toolbox: {
+	feature: {
+		dataZoom: {},
+		brush: {
+		type: ['rect', 'polygon', 'clear']
+		}
+	}
+	},
+	brush: {},
+	legend: {
+	data: ['L1', 'L2', 'L3', 'L4', 'L5', 'S1', 'S2'],
+	left: 'center',
+	bottom: 10
+	},
+	xAxis: [
+	{
+		type: 'value',
+		scale: true,
+		min: -6,
+		max: 6,
+		axisLabel: {
+			formatter: '{value} mm'
+		},
+		splitLine: {
+			show: false
+		}
+	}
+	],
+	yAxis: [
+	{
+		type: 'value',
+		scale: true,
+		min: -70,
+		max: 0,
+		axisLabel: {
+			formatter: '{value} mm'
+		},
+		splitLine: {
+			show: false
+		}
+	}
+	],
+	series: [
+	{
+		name: 'Electrode',
+		type: 'scatter',
+		symbolSize: [19, 50], //点的大小
+		symbol: 'rect',
+		//   color: colors[1],
+		emphasis: {
+			focus: 'series'
+		},
+		itemStyle: {
+			color: 'blue',
+		},
+		// prettier-ignore
+		data: standardizeToMinus(medtronic565_2d),
+	},
+	{
+		name: 'L1',
+		type: 'scatter',
+	//   color: colors[0],
+		emphasis: {
+			focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_L_2D['L1']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L1 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	// 	color: colors[0],
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'AVG' }, { xAxis: 160 }]
+		}
+	},
+	{
+		name: 'L2',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_L_2D['L2']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L2 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L3',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_L_2D['L3']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L3 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L4',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_L_2D['L4']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L4 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L5',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_L_2D['L5']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L5 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'S1',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_L_2D['S1']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'S1 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'S2',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_L_2D['S2']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'S2 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	]
+}
+
+// 2D版S类按节段 with medtronic
+var nerverootsOpinionS2DMdt = {
+	title: {
+	text: 'S类神经根进入点',
+	subtext: 'N=5'
+	},
+	grid: {
+		show: true,
+		left: '3%',
+		right: '7%',
+		bottom: '7%',
+		containLabel: true
+	},
+	tooltip: {
+	// trigger: 'axis',
+	showDelay: 0,
+	formatter: function (params) {
+		if (params.value.length > 1) {
+		return (
+			params.seriesName +
+			' :<br/>' +
+			params.value[0] +
+			'mm ' +
+			params.value[1] +
+			'mm '
+		);
+		} else {
+		return (
+			params.seriesName +
+			' :<br/>' +
+			params.name +
+			' : ' +
+			params.value +
+			'mm '
+		);
+		}
+	},
+	axisPointer: {
+		show: true,
+		type: 'cross',
+		lineStyle: {
+		type: 'dashed',
+		width: 1
+		}
+	}
+	},
+	toolbox: {
+	feature: {
+		dataZoom: {},
+		brush: {
+		type: ['rect', 'polygon', 'clear']
+		}
+	}
+	},
+	brush: {},
+	legend: {
+	data: ['L1', 'L2', 'L3', 'L4', 'L5', 'S1', 'S2'],
+	left: 'center',
+	bottom: 10
+	},
+	xAxis: [
+	{
+		type: 'value',
+		scale: true,
+		min: -6,
+		max: 6,
+		axisLabel: {
+			formatter: '{value} mm'
+		},
+		axisLine: {
+			show: true
+		},
+		splitLine: {
+			show: false
+		}
+	}
+	],
+	yAxis: [
+	{
+		interval: 10,
+		position: 'left',
+		type: 'value',
+		scale: true,
+		min: -70,
+		max: 0,
+		axisLabel: {
+			formatter: '{value} mm',
+		},
+		axisLine: {
+			show: true
+		},
+		splitLine: {
+			show: false
+		},
+		axisTick: {
+			interval: 10,
+			show: true
+		}
+	}
+	],
+	series: [
+	{
+		name: 'Electrode',
+		type: 'scatter',
+		symbolSize: [19, 50], //点的大小
+		symbol: 'rect',
+		//   color: colors[1],
+		emphasis: {
+			focus: 'series'
+		},
+		itemStyle: {
+			color: 'blue',
+		},
+		// prettier-ignore
+		data: standardizeToMinus(medtronic565_2d),
+	},
+	{
+		name: 'L1',
+		type: 'scatter',
+	//   color: colors[0],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_S_2D['L1']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L1 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'AVG' }, { xAxis: 160 }]
+		}
+	},
+	{
+		name: 'L2',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_S_2D['L2']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L2 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L3',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_S_2D['L3']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L3 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L4',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_S_2D['L4']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L4 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L5',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_S_2D['L5']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L5 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+	//   markPoint: {
+	//     data: [
+	//       { type: 'max', name: 'Max' },
+	//       { type: 'min', name: 'Min' }
+	//     ]
+	//   },
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'S1',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_S_2D['S1']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'S1 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'S2',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_S_2D['S2']),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'S2 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	]
+}
 
 // M类样本按节段
 var nerverootsOpinionMNew = {
@@ -2646,6 +5147,8 @@ var nerverootsOpinionS = {
 	],
 	backgroundColor: "#fff",
 }
+
+
 export { 
 	nerverootsOpinionMNew,
 	nerverootsOpinionLNew,
@@ -2662,4 +5165,10 @@ export {
     msV10_L_one,
     msV10_M_one,
     msV10_S_one,
+	nerverootsOpinionM2D,
+	nerverootsOpinionL2D,
+	nerverootsOpinionS2D,
+	nerverootsOpinionM2DMdt,
+	nerverootsOpinionL2DMdt,
+	nerverootsOpinionS2DMdt,
 }
