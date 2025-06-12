@@ -1,28 +1,32 @@
 <template>
 <div class="page">
-    <h1 class="line-title">V1.0电极</h1>
+    <h1 class="line-title">V1.23 方案1电极</h1>
     <div class="charts-line-box">
-        <div class="charts-col-box" style="width: 30%;">
+        <div class="charts-col-box" style="width: 33%;">
             <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-l"></div>
         </div>
-        <div class="charts-col-box" style="width: 30%;">
+        <div class="charts-col-box" style="width: 33%;">
             <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-m"></div>
         </div>
-        <div class="charts-col-box" style="width: 30%;">
+        <div class="charts-col-box" style="width: 33%;">
             <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-s"></div>
         </div>
     </div>
-    <h1 class="line-title">V1.1电极</h1>
-    <div class="line-title">--------待补充--------</div>
+    <h1 class="line-title">V1.24 方案2电极（M类）</h1>
+    <div class="charts-line-box">
+        <div class="charts-col-box" style="width: 33%;">
+            <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-m-124"></div>
+        </div>
+    </div>
     <h1 class="line-title">美敦力电极</h1>
     <div class="charts-line-box">
-        <div class="charts-col-box" style="width: 30%;">
+        <div class="charts-col-box" style="width: 33%;">
             <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-l-mdt"></div>
         </div>
-        <div class="charts-col-box" style="width: 30%;">
+        <div class="charts-col-box" style="width: 33%;">
             <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-m-mdt"></div>
         </div>
-        <div class="charts-col-box" style="width: 30%;">
+        <div class="charts-col-box" style="width: 33%;">
             <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-s-mdt"></div>
         </div>
     </div>
@@ -111,6 +115,9 @@ import { nerverootsOpinionMNew, nerverootsOpinionOne, nerverootsOpinionL, nerver
     nerverootsOpinionM2DMdt,
 	nerverootsOpinionL2DMdt,
 	nerverootsOpinionS2DMdt,
+    bsxCoverEdgeX_2d,
+    msV124_M_2d,
+    nerverootsOpinion2DV124m,
  } from '../nerverootsData.js'
 
 var twoOpinionM = ref(nerverootsOpinionM2D)
@@ -119,6 +126,7 @@ var twoOpinionS = ref(nerverootsOpinionS2D)
 var twoOpinionMMdt = ref(nerverootsOpinionM2DMdt)
 var twoOpinionLMdt = ref(nerverootsOpinionL2DMdt)
 var twoOpinionSMdt = ref(nerverootsOpinionS2DMdt)
+var twoOpinionM124 = ref(nerverootsOpinion2DV124m)
 var threeOpinionOne = ref(nerverootsOpinionMNew)
 var threeOpinionL = ref(nerverootsOpinionL)
 var threeOpinionM = ref(nerverootsOpinionM)
@@ -319,6 +327,7 @@ onUpdated(() => {
     myChart2DMMdt.setOption(twoOpinionMMdt.value)
     myChart2DLMdt.setOption(twoOpinionLMdt.value)
     myChart2DSMdt.setOption(twoOpinionSMdt.value)
+    myChartM124.setOption(twoOpinionM124.value)
     myChart0.setOption(threeOpinionOne.value);
     myChart1.setOption(threeOpinionL.value);
     myChart2.setOption(threeOpinionM.value);
@@ -331,6 +340,7 @@ var myChart2DS = null
 var myChart2DLMdt = null
 var myChart2DMMdt = null
 var myChart2DSMdt = null
+var myChartM124 = null
 var myChart0 = null
 var myChart1 = null
 var myChart2 = null
@@ -343,6 +353,7 @@ onMounted(() => {
     myChart2DMMdt = echarts.init(document.getElementById('myChart-2d-m-mdt'));
     myChart2DLMdt = echarts.init(document.getElementById('myChart-2d-l-mdt'));
     myChart2DSMdt = echarts.init(document.getElementById('myChart-2d-s-mdt'));
+    myChartM124 = echarts.init(document.getElementById('myChart-2d-m-124'));
     myChart0 = echarts.init(document.getElementById('myChart-0'));
     myChart1 = echarts.init(document.getElementById('myChart-1'));
     myChart2 = echarts.init(document.getElementById('myChart-2'));
@@ -353,6 +364,7 @@ onMounted(() => {
     myChart2DMMdt.setOption(twoOpinionMMdt.value)
     myChart2DLMdt.setOption(twoOpinionLMdt.value)
     myChart2DSMdt.setOption(twoOpinionSMdt.value)
+    myChartM124.setOption(twoOpinionM124.value)
     myChart0.setOption(threeOpinionOne.value);
     myChart1.setOption(threeOpinionL.value);
     myChart2.setOption(threeOpinionM.value);

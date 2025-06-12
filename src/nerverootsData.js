@@ -265,6 +265,29 @@ const msV10_S_2d = [
 	[2.85, -4.89],
 ]
 
+// v1.24 均匀646 M型
+const msV124_M_2d = [
+	[4, 0],
+	[4, -10.3],
+	[4, -20.6],
+	[4, -30.9],
+	[4, -41.2],
+	[4, -51.5],
+	[0, -5.15],
+	[0, -15.45],
+	[0, -25.75],
+	[0, -51.5],
+	[-4, 0],
+	[-4, -10.3],
+	[-4, -20.6],
+	[-4, -30.9],
+	[-4, -41.2],
+	[-4, -51.5],
+]
+
+// BSX CoverEdgeX
+const bsxCoverEdgeX_2d = []
+
 // 2D版M类按节段
 var nerverootsOpinionM2D = {
 	title: {
@@ -272,10 +295,11 @@ var nerverootsOpinionM2D = {
 	subtext: 'N=5'
 	},
 	grid: {
-	left: '3%',
-	right: '7%',
-	bottom: '7%',
-	containLabel: true
+		show: true,
+		left: '3%',
+		right: '7%',
+		bottom: '7%',
+		containLabel: true
 	},
 	tooltip: {
 	// trigger: 'axis',
@@ -340,10 +364,11 @@ var nerverootsOpinionM2D = {
 	],
 	yAxis: [
 	{
+		interval: 10,
 		type: 'value',
 		scale: true,
 		min: -70,
-		max: 0,
+		max: 5,
 		axisLabel: {
 			formatter: '{value} mm'
 		},
@@ -680,10 +705,11 @@ var nerverootsOpinionL2D = {
 	subtext: 'N=5'
 	},
 	grid: {
-	left: '3%',
-	right: '7%',
-	bottom: '7%',
-	containLabel: true
+		show: true,
+		left: '3%',
+		right: '7%',
+		bottom: '7%',
+		containLabel: true
 	},
 	tooltip: {
 	// trigger: 'axis',
@@ -748,10 +774,11 @@ var nerverootsOpinionL2D = {
 	],
 	yAxis: [
 	{
+		interval: 10,
 		type: 'value',
 		scale: true,
 		min: -70,
-		max: 0,
+		max: 5,
 		axisLabel: {
 			formatter: '{value} mm'
 		},
@@ -1166,7 +1193,7 @@ var nerverootsOpinionS2D = {
 		type: 'value',
 		scale: true,
 		min: -70,
-		max: 0,
+		max: 5,
 		axisLabel: {
 			formatter: '{value} mm',
 		},
@@ -1467,6 +1494,371 @@ var nerverootsOpinionS2D = {
 	]
 }
 
+// 2D版所有样本按节段 with v124m
+var nerverootsOpinion2DV124m = {
+	title: {
+		text: 'BSI神经根进入点汇总',
+		subtext: 'N=15'
+	},
+	grid: {
+		show: true,
+		left: '3%',
+		right: '7%',
+		bottom: '7%',
+		containLabel: true
+	},
+	tooltip: {
+		showDelay: 0,
+		formatter: function (params) {
+			if (params.value.length > 1) {
+			return (
+				params.seriesName +
+				' :<br/>' +
+				params.value[0] +
+				'mm ' +
+				params.value[1] +
+				'mm '
+			);
+			} else {
+			return (
+				params.seriesName +
+				' :<br/>' +
+				params.name +
+				' : ' +
+				params.value +
+				'mm '
+			);
+			}
+		},
+		axisPointer: {
+			show: true,
+			type: 'cross',
+			lineStyle: {
+			type: 'dashed',
+			width: 1
+			}
+		}
+	},
+	toolbox: {
+	feature: {
+		dataZoom: {},
+		brush: {
+			type: ['rect', 'polygon', 'clear']
+		}
+	}
+	},
+	brush: {},
+	legend: {
+		data: ['L1', 'L2', 'L3', 'L4', 'L5', 'S1', 'S2'],
+		left: 'center',
+		bottom: 10
+	},
+	xAxis: [
+		{
+			type: 'value',
+			scale: true,
+			min: -6,
+			max: 6,
+			axisLabel: {
+				formatter: '{value} mm'
+			},
+			axisLine: {
+				show: true
+			},
+			splitLine: {
+				show: false
+			}
+		}
+	],
+	yAxis: [
+		{
+			interval: 10,
+			position: 'left',
+			type: 'value',
+			scale: true,
+			min: -70,
+			max: 5,
+			axisLabel: {
+				formatter: '{value} mm',
+			},
+			axisLine: {
+				show: true
+			},
+			splitLine: {
+				show: false
+			},
+			axisTick: {
+				interval: 10,
+				show: true
+			}
+		}
+	],
+	series: [
+	{
+		name: 'Electrode',
+		type: 'scatter',
+		symbolSize: [19, 50], //点的大小
+		symbol: 'rect',
+		emphasis: {
+			focus: 'series'
+		},
+		itemStyle: {
+			color: 'blue',
+		},
+		// prettier-ignore
+		data: msV124_M_2d,
+	},
+	{
+		name: 'L1',
+		type: 'scatter',
+		emphasis: {
+			focus: 'series'
+		},
+		data: standardizeToMinus(STANDARD_S_2D['L1'].concat(STANDARD_L_2D['L1'], STANDARD_S_2D['L1'])),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+				{
+					name: 'L1 Range',
+					xAxis: 'min',
+					yAxis: 'min'
+				},
+				{
+					xAxis: 'max',
+					yAxis: 'max'
+				}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'AVG' }, { xAxis: 160 }]
+		}
+	},
+	{
+		name: 'L2',
+		type: 'scatter',
+		emphasis: {
+			focus: 'series'
+		},
+		data: standardizeToMinus(STANDARD_S_2D['L2'].concat(STANDARD_L_2D['L2'], STANDARD_S_2D['L2'])),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L2 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L3',
+		type: 'scatter',
+		emphasis: {
+		focus: 'series'
+		},
+		data: standardizeToMinus(STANDARD_S_2D['L3'].concat(STANDARD_L_2D['L3'], STANDARD_S_2D['L3'])),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L3 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L4',
+		type: 'scatter',
+		emphasis: {
+		focus: 'series'
+		},
+		data: standardizeToMinus(STANDARD_S_2D['L4'].concat(STANDARD_L_2D['L4'], STANDARD_S_2D['L4'])),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L4 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'L5',
+		type: 'scatter',
+	//   color: colors[1],
+		emphasis: {
+		focus: 'series'
+		},
+		// prettier-ignore
+		data: standardizeToMinus(STANDARD_S_2D['L5'].concat(STANDARD_L_2D['L5'], STANDARD_S_2D['L5'])),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'L5 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'S1',
+		type: 'scatter',
+		emphasis: {
+		focus: 'series'
+		},
+		data: standardizeToMinus(STANDARD_S_2D['S1'].concat(STANDARD_L_2D['S1'], STANDARD_S_2D['S1'])),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'S1 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	{
+		name: 'S2',
+		type: 'scatter',
+		emphasis: {
+		focus: 'series'
+		},
+		data: standardizeToMinus(STANDARD_S_2D['S2'].concat(STANDARD_L_2D['S2'], STANDARD_S_2D['S2'])),
+		markArea: {
+		silent: true,
+		itemStyle: {
+			color: 'transparent',
+			borderWidth: 1,
+			borderType: 'dashed'
+		},
+		data: [
+			[
+			{
+				name: 'S2 Range',
+				xAxis: 'min',
+				yAxis: 'min'
+			},
+			{
+				xAxis: 'max',
+				yAxis: 'max'
+			}
+			]
+		]
+		},
+		markLine: {
+		lineStyle: {
+			type: 'solid'
+		},
+		data: [{ type: 'average', name: 'Average' }, { xAxis: 170 }]
+		}
+	},
+	]
+}
+
+
 // 2D版M类按节段 with medtronic
 var nerverootsOpinionM2DMdt = {
 	title: {
@@ -1474,10 +1866,11 @@ var nerverootsOpinionM2DMdt = {
 	subtext: 'N=5'
 	},
 	grid: {
-	left: '3%',
-	right: '7%',
-	bottom: '7%',
-	containLabel: true
+		show: true,
+		left: '3%',
+		right: '7%',
+		bottom: '7%',
+		containLabel: true
 	},
 	tooltip: {
 	// trigger: 'axis',
@@ -1542,10 +1935,11 @@ var nerverootsOpinionM2DMdt = {
 	],
 	yAxis: [
 	{
+		interval: 10,
 		type: 'value',
 		scale: true,
 		min: -70,
-		max: 0,
+		max: 5,
 		axisLabel: {
 			formatter: '{value} mm'
 		},
@@ -1882,10 +2276,11 @@ var nerverootsOpinionL2DMdt = {
 	subtext: 'N=5'
 	},
 	grid: {
-	left: '3%',
-	right: '7%',
-	bottom: '7%',
-	containLabel: true
+		show: true,
+		left: '3%',
+		right: '7%',
+		bottom: '7%',
+		containLabel: true
 	},
 	tooltip: {
 	// trigger: 'axis',
@@ -1950,10 +2345,11 @@ var nerverootsOpinionL2DMdt = {
 	],
 	yAxis: [
 	{
+		interval: 10,
 		type: 'value',
 		scale: true,
 		min: -70,
-		max: 0,
+		max: 5,
 		axisLabel: {
 			formatter: '{value} mm'
 		},
@@ -2368,7 +2764,7 @@ var nerverootsOpinionS2DMdt = {
 		type: 'value',
 		scale: true,
 		min: -70,
-		max: 0,
+		max: 5,
 		axisLabel: {
 			formatter: '{value} mm',
 		},
@@ -2723,7 +3119,7 @@ var nerverootsOpinionMNew = {
 		show: true, //展示坐标轴指示线
 		},
 		viewControl: {
-		distance: 320, //与视角的距离，值越大，图离视角越远，图越小
+		distance: 350, //与视角的距离，值越大，图离视角越远，图越小
 		alpha: 7, //绕x轴旋转的角度（上下旋转），增大，视角顺时针增大（向上）
 		beta: 20, //绕y轴旋转的角度（左右旋转），增大，视角逆时针增大（向右）
 		center: [0, 0, 0], //第一个参数：增大，视角沿x轴正方向水平右移动（图向左）；第二个参数：增大，视角沿y轴正方向垂直向上移动（图向下）；第三个参数：增大，视角向z轴正方向移动（图变小）
@@ -2883,7 +3279,7 @@ var nerverootsOpinionLNew = {
 		show: true, //展示坐标轴指示线
 		},
 		viewControl: {
-		distance: 320, //与视角的距离，值越大，图离视角越远，图越小
+		distance: 350, //与视角的距离，值越大，图离视角越远，图越小
 		alpha: 7, //绕x轴旋转的角度（上下旋转），增大，视角顺时针增大（向上）
 		beta: 20, //绕y轴旋转的角度（左右旋转），增大，视角逆时针增大（向右）
 		center: [0, 0, 0], //第一个参数：增大，视角沿x轴正方向水平右移动（图向左）；第二个参数：增大，视角沿y轴正方向垂直向上移动（图向下）；第三个参数：增大，视角向z轴正方向移动（图变小）
@@ -3043,7 +3439,7 @@ var nerverootsOpinionSNew = {
 		show: true, //展示坐标轴指示线
 		},
 		viewControl: {
-		distance: 320, //与视角的距离，值越大，图离视角越远，图越小
+		distance: 350, //与视角的距离，值越大，图离视角越远，图越小
 		alpha: 7, //绕x轴旋转的角度（上下旋转），增大，视角顺时针增大（向上）
 		beta: 20, //绕y轴旋转的角度（左右旋转），增大，视角逆时针增大（向右）
 		center: [0, 0, 0], //第一个参数：增大，视角沿x轴正方向水平右移动（图向左）；第二个参数：增大，视角沿y轴正方向垂直向上移动（图向下）；第三个参数：增大，视角向z轴正方向移动（图变小）
@@ -3204,7 +3600,7 @@ var nerverootsOpinionOne = {
 		show: true, //展示坐标轴指示线
 		},
 		viewControl: {
-		distance: 320, //与视角的距离，值越大，图离视角越远，图越小
+		distance: 350, //与视角的距离，值越大，图离视角越远，图越小
 		alpha: 7, //绕x轴旋转的角度（上下旋转），增大，视角顺时针增大（向上）
 		beta: 20, //绕y轴旋转的角度（左右旋转），增大，视角逆时针增大（向右）
 		center: [0, 0, 0], //第一个参数：增大，视角沿x轴正方向水平右移动（图向左）；第二个参数：增大，视角沿y轴正方向垂直向上移动（图向下）；第三个参数：增大，视角向z轴正方向移动（图变小）
@@ -3434,7 +3830,7 @@ var nerverootsOpinionL = {
 		show: true, //展示坐标轴指示线
 		},
 		viewControl: {
-		distance: 320, //与视角的距离，值越大，图离视角越远，图越小
+		distance: 350, //与视角的距离，值越大，图离视角越远，图越小
 		alpha: 7, //绕x轴旋转的角度（上下旋转），增大，视角顺时针增大（向上）
 		beta: 20, //绕y轴旋转的角度（左右旋转），增大，视角逆时针增大（向右）
 		center: [0, 0, 0], //第一个参数：增大，视角沿x轴正方向水平右移动（图向左）；第二个参数：增大，视角沿y轴正方向垂直向上移动（图向下）；第三个参数：增大，视角向z轴正方向移动（图变小）
@@ -4232,7 +4628,7 @@ var nerverootsOpinionM = {
 		show: true, //展示坐标轴指示线
 		},
 		viewControl: {
-		distance: 320, //与视角的距离，值越大，图离视角越远，图越小
+		distance: 350, //与视角的距离，值越大，图离视角越远，图越小
 		alpha: 7, //绕x轴旋转的角度（上下旋转），增大，视角顺时针增大（向上）
 		beta: 20, //绕y轴旋转的角度（左右旋转），增大，视角逆时针增大（向右）
 		center: [0, 0, 0], //第一个参数：增大，视角沿x轴正方向水平右移动（图向左）；第二个参数：增大，视角沿y轴正方向垂直向上移动（图向下）；第三个参数：增大，视角向z轴正方向移动（图变小）
@@ -4695,7 +5091,7 @@ var nerverootsOpinionS = {
 		show: true, //展示坐标轴指示线
 		},
 		viewControl: {
-		distance: 320, //与视角的距离，值越大，图离视角越远，图越小
+		distance: 350, //与视角的距离，值越大，图离视角越远，图越小
 		alpha: 7, //绕x轴旋转的角度（上下旋转），增大，视角顺时针增大（向上）
 		beta: 20, //绕y轴旋转的角度（左右旋转），增大，视角逆时针增大（向右）
 		center: [0, 0, 0], //第一个参数：增大，视角沿x轴正方向水平右移动（图向左）；第二个参数：增大，视角沿y轴正方向垂直向上移动（图向下）；第三个参数：增大，视角向z轴正方向移动（图变小）
@@ -5171,4 +5567,7 @@ export {
 	nerverootsOpinionM2DMdt,
 	nerverootsOpinionL2DMdt,
 	nerverootsOpinionS2DMdt,
+	msV124_M_2d,
+	bsxCoverEdgeX_2d,
+	nerverootsOpinion2DV124m
 }
