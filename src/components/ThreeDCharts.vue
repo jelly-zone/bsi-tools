@@ -1,36 +1,85 @@
 <template>
 <div class="page">
-    <h1 class="line-title">V1.23 方案1电极</h1>
+    <!-- <h1 class="line-title">V1.24 方案2电极</h1> -->
     <div class="charts-line-box">
-        <div class="charts-col-box" style="width: 33%;">
-            <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-l"></div>
+        <div class="charts-col-box" style="width: 18%; margin-left: 30%;">
+            <div>
+                <h3>
+                    电极型号：
+                    <el-select v-model="electrode_4" placeholder="Medtronic" @Change="selectElectrode4" style="width: 180px">
+                        <el-option
+                        v-for="item in electrodeList"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                    /></el-select>
+                </h3>
+                <div>长轴边到边间距：{{ curElectrodes[4].longDis }}mm</div>
+                <div>短轴边到边间距：{{ curElectrodes[4].shortDis }}mm</div>
+                <div>触点尺寸：{{ curElectrodes[4].contactSize[1] + 'mm * ' + curElectrodes[4].contactSize[0] + 'mm'}}</div>
+                <div>Paddle尺寸：{{ curElectrodes[4].paddleSize[1] + 'mm * ' + curElectrodes[4].paddleSize[0] + 'mm'}}</div>
+                <!-- 选择模型：<el-select v-model="curModel" placeholder="bsi-002" @Change="selectModel" style="width: 240px">
+                    <el-option
+                    v-for="item in modelList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                />
+                </el-select> -->
+                <h2>{{ curElectrodes[4].name }}</h2>
+                <div v-if="curElectrodes[4].name=='V1.24-M'" id="rounded-container-124m">
+                    <div class="column-1">
+                        <div v-for="i in 6" :key="'col1-'+i" class="small-rect"></div>
+                    </div>
+                    <div class="column-2">
+                        <div v-for="i in 4" :key="'col2-'+i" class="small-rect"></div>
+                    </div>
+                    <div class="column-3">
+                        <div v-for="i in 6" :key="'col3-'+i" class="small-rect"></div>
+                    </div>
+                </div>
+                <div v-if="curElectrodes[4].name=='V1.24-32'" id="rounded-container-12432">
+                    <div class="column" v-for="(column, index) in 4" :key="index">
+                        <div class="small-rect" v-for="(rect, rectIndex) in 8" :key="rectIndex"></div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="charts-col-box" style="width: 33%;">
-            <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-m"></div>
-        </div>
-        <div class="charts-col-box" style="width: 33%;">
-            <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-s"></div>
+            <div style="display: flex;">
+                <el-button @click="moveElecPosition('up')" type="success" plain>电极上移</el-button>
+                <el-button @click="moveElecPosition('down')" type="success" plain>电极下移</el-button>
+                <!-- <el-button @click="deleteMoves" type="danger" plain>还原</el-button> -->
+            </div>
+            <div style="width: 330px;height:900px;" class="single-chart-box" id="myChart-2d-m-124"></div>
         </div>
     </div>
-    <h1 class="line-title">V1.24 方案2电极（M类）</h1>
-    <div class="charts-line-box">
+
+    <h1 v-show="false" class="line-title">（弃）V1.23 方案</h1>
+    <div v-show="false" class="charts-line-box">
         <div class="charts-col-box" style="width: 33%;">
-            <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-m-124"></div>
+            <div style="width: 330px;height:1000px;" class="single-chart-box" id="myChart-2d-l"></div>
+        </div>
+        <div class="charts-col-box" style="width: 33%;">
+            <div style="width: 330px;height:1000px;" class="single-chart-box" id="myChart-2d-m"></div>
+        </div>
+        <div class="charts-col-box" style="width: 33%;">
+            <div style="width: 330px;height:1000px;" class="single-chart-box" id="myChart-2d-s"></div>
         </div>
     </div>
-    <h1 class="line-title">美敦力电极</h1>
-    <div class="charts-line-box">
+    <h1 v-show="false" class="line-title">美敦力电极</h1>
+    <div v-show="false" class="charts-line-box">
         <div class="charts-col-box" style="width: 33%;">
-            <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-l-mdt"></div>
+            <div style="width: 330px;height:1000px;" class="single-chart-box" id="myChart-2d-l-mdt"></div>
         </div>
         <div class="charts-col-box" style="width: 33%;">
-            <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-m-mdt"></div>
+            <div style="width: 330px;height:1000px;" class="single-chart-box" id="myChart-2d-m-mdt"></div>
         </div>
         <div class="charts-col-box" style="width: 33%;">
-            <div style="width: 330px;height:940px;" class="single-chart-box" id="myChart-2d-s-mdt"></div>
+            <div style="width: 330px;height:1000px;" class="single-chart-box" id="myChart-2d-s-mdt"></div>
         </div>
     </div>
-    <div class="charts-line-box">
+    <!-- <div class="charts-line-box">
         <div class="charts-col-box">
             <div>
                 电极型号：<el-select v-model="electrode_0" placeholder="Medtronic" @Change="selectElectrode0" style="width: 240px">
@@ -99,7 +148,7 @@
             </div>
             <div style="width: 500px;height:1000px;" class="single-chart-box" id="myChart-3"></div>
         </div>
-    </div>
+    </div> -->
 </div>
 </template>
 
@@ -107,7 +156,8 @@
 import { computed, onMounted, onUpdated, ref } from "vue";
 import * as echarts from 'echarts';
 import 'echarts-gl'
-import { nerverootsOpinionMNew, nerverootsOpinionOne, nerverootsOpinionL, nerverootsOpinionM, nerverootsOpinionS, medtronic565, msV10_L, msV10_M, msV10_S, medtronic565_one,
+import { 
+    nerverootsOpinionMNew, nerverootsOpinionOne, nerverootsOpinionL, nerverootsOpinionM, nerverootsOpinionS, medtronic565, msV10_L, msV10_M, msV10_S, medtronic565_one,
     msV10_L_one,
     msV10_M_one,
     msV10_S_one,
@@ -118,6 +168,7 @@ import { nerverootsOpinionMNew, nerverootsOpinionOne, nerverootsOpinionL, nerver
     bsxCoverEdgeX_2d,
     msV124_M_2d,
     nerverootsOpinion2DV124m,
+    msV124_32,
  } from '../nerverootsData.js'
 
 var twoOpinionM = ref(nerverootsOpinionM2D)
@@ -132,26 +183,58 @@ var threeOpinionL = ref(nerverootsOpinionL)
 var threeOpinionM = ref(nerverootsOpinionM)
 var threeOpinionS = ref(nerverootsOpinionS)
 
+var medtronic565Ref = ref(medtronic565)
+var msV10_LRef = ref(msV10_L)
+var msV10_MRef = ref(msV10_M)
+var msV10_SRef = ref(msV10_S)
+var msV124_M_2dRef = ref(msV124_M_2d)
+const msV124_M_2d_ori = msV124_M_2d
+var msV124_32Ref = ref(msV124_32)
+const msV124_32_ori = msV124_32
+
+
 const eletrodeConfig = {
     medtronic: {
         name: "Medtronic",
-        longDis: 8.5,
-        shortDis: 2.5,
+        longDis: 4.5,
+        shortDis: 1,
+        contactSize: [1.5, 4],
+        paddleSize: [64.2, 10],
     },
     V10L: {
         name: "V1.0-L",
-        longDis: 16,
-        shortDis: 4,
+        longDis: 12,
+        shortDis: 2.5,
+        contactSize: [1.5, 4],
+        paddleSize: [0, 0],
     },
     V10M: {
         name: "V1.0-M",
-        longDis: 13,
-        shortDis: 4,
+        longDis: 9,
+        shortDis: 2.5,
+        contactSize: [1.5, 4],
+        paddleSize: [0, 0],
     },
     V10S: {
         name: "V1.0-S",
-        longDis: 10,
-        shortDis: 4,
+        longDis: 6,
+        shortDis: 2.5,
+        contactSize: [1.5, 4],
+        paddleSize: [0, 0],
+    },
+    V124M: {
+        name: 'V1.24-M',
+        longDis: 6.3,
+        shortDis: 2.5,
+        contactSize: [1.5, 4],
+        paddleSize: [63.5, 12.5],
+    },
+    V12432: {
+        name: 'V1.24-32',
+        longDis: 3.5,
+        shortDis: 1.7,
+        contactSize: [1, 3.4],
+        paddleSize: [63.15, 11],
     },
 }
 
@@ -168,44 +251,74 @@ const modelList = [
 
 const electrodeList = [
     {
+        value: "V1.24-M",
+        label: "V1.24-M",
+    },
+    {
+        value: "V1.24-32",
+        label: "V1.24-32",
+    },
+    {
         value: "Medtronic",
         label: "Medtronic",
     },
     {
         value: "V1.0-L",
-        label: "V1.0-L",
+        label: "（弃）V1.0-L",
     },
     {
         value: "V1.0-M",
-        label: "V1.0-M",
+        label: "（弃）V1.0-M",
     },
     {
         value: "V1.0-S",
-        label: "V1.0-S",
+        label: "（弃）V1.0-S",
     },
 ]
 
 const curElectrodes = ref([
     {
         name: "Medtronic",
-        longDis: 8.5,
-        shortDis: 2.5,
+        longDis: 4.5,
+        shortDis: 1,
+        contactSize: [1.5, 4],
+        paddleSize: [64.2, 10],
     },
     {
         name: "V1.0-L",
-        longDis: 16,
-        shortDis: 4,
+        longDis: 12,
+        shortDis: 2.5,
+        contactSize: [1.5, 4],
+        paddleSize: [0, 0],
     },
     {
         name: "V1.0-M",
-        longDis: 13,
-        shortDis: 4,
+        longDis: 9,
+        shortDis: 2.5,
+        contactSize: [1.5, 4],
+        paddleSize: [0, 0],
     },
     {
         name: "V1.0-S",
-        longDis: 10,
-        shortDis: 4,
+        longDis: 6,
+        shortDis: 2.5,
+        contactSize: [1.5, 4],
+        paddleSize: [0, 0],
     },
+    {
+        name: 'V1.24-M',
+        longDis: 6.3,
+        shortDis: 2.5,
+        contactSize: [1.5, 4],
+        paddleSize: [63.5, 12.5],
+    },
+    {
+        name: 'V1.24-32',
+        longDis: 3.5,
+        shortDis: 1.7,
+        contactSize: [1, 3.4],
+        paddleSize: [63.15, 11],
+    }
 ])
 
 const curModel = ref('bsi-002')
@@ -214,6 +327,23 @@ const electrode_0 = ref('Medtronic')
 const electrode_1 = ref('V1.0-L')
 const electrode_2 = ref('V1.0-M')
 const electrode_3 = ref('V1.0-S')
+let electrode_4 = ref('V1.24-M')
+
+const round = (number, precision) => {
+  return Math.round(+number + "e" + precision) / Math.pow(10, precision);
+  //same as:
+  //return Number(Math.round(+number + 'e' + precision) + 'e-' + precision);
+}
+
+var standardizeToMinus = (arr) => {
+	let len = 0
+	let newArr = []
+	arr.forEach(ele => {
+		len = ele.length
+		newArr.push([ele[len-2], round(ele[len-1] - 36.61, 2)])
+	});
+	return newArr
+}
 
 function selectModel(modelName) {
     console.log("select model:", modelName)
@@ -320,6 +450,94 @@ function selectElectrode3(str) {
     }
 }
 
+
+function moveElecPosition(dir) {
+    if (curElectrodes.value[4].name == 'V1.24-M') {
+        if (dir == 'up') {
+            console.log('up')
+            msV124_M_2dRef.value.forEach(e => {
+                e[1] = round(e[1] + 2, 2)
+            })
+        } else {
+            console.log('down')
+            msV124_M_2dRef.value.forEach(e => {
+                e[1] = round(e[1] - 2, 2)
+            })
+        }
+        twoOpinionM124.value.series[0].data = msV124_M_2dRef.value
+        myChartM124.setOption(twoOpinionM124.value)
+    }
+    else if(curElectrodes.value[4].name == 'V1.24-32') {
+        if (dir == 'up') {
+            console.log('up')
+            msV124_32Ref.value.forEach(e => {
+                e[1] = round(e[1] + 2, 2)
+            })
+        } else {
+            console.log('down')
+            msV124_32Ref.value.forEach(e => {
+                e[1] = round(e[1] - 2, 2)
+            })
+        }
+        twoOpinionM124.value.series[0].data = msV124_32Ref.value
+        myChartM124.setOption(twoOpinionM124.value)
+    }
+    else return
+}
+
+// function deleteMoves() {
+//     if (curElectrodes.value[4].name == 'V1.24-M') {
+//         twoOpinionM124.value.series[0].data = msV124_M_2d_ori
+//         console.log('here')
+//         myChartM124.setOption(twoOpinionM124.value)
+//     }
+//     else if (curElectrodes.value[4].name == 'V1.24-32') {
+//         msV124_32Ref.value = msV124_32_ori
+//         twoOpinionM124.value.series[0].data = msV124_32Ref.value
+//         myChartM124.setOption(twoOpinionM124.value)
+//     }
+// }
+
+function selectElectrode4(str) {
+    console.log("4 you choose :", str)
+    twoOpinionM124.value.series[0].name = str
+    switch (str) {
+        case "V1.0-L":
+            twoOpinionM124.value.series[0].symbolSize = [19, 50]
+            twoOpinionM124.value.series[0].data = standardizeToMinus(msV10_LRef.value)
+            curElectrodes.value[4] = eletrodeConfig['V10L']
+            break
+        case "V1.0-M":
+            twoOpinionM124.value.series[0].symbolSize = [19, 50]
+            twoOpinionM124.value.series[0].data = standardizeToMinus(msV10_MRef.value)
+            curElectrodes.value[4] = eletrodeConfig['V10M']
+            break
+        case "V1.0-S":
+            twoOpinionM124.value.series[0].symbolSize = [19, 50]
+            twoOpinionM124.value.series[0].data = standardizeToMinus(msV10_SRef.value)
+            curElectrodes.value[4] = eletrodeConfig['V10S']
+            break
+        case "Medtronic":
+            twoOpinionM124.value.series[0].symbolSize = [19, 50]
+            twoOpinionM124.value.series[0].data = standardizeToMinus(medtronic565Ref.value)
+            curElectrodes.value[4] = eletrodeConfig['medtronic']
+            break
+        case "V1.24-M":
+            twoOpinionM124.value.series[0].symbolSize = [19, 50]
+            twoOpinionM124.value.series[0].data = msV124_M_2dRef.value
+            curElectrodes.value[4] = eletrodeConfig['V124M']
+            break
+        case 'V1.24-32':
+            // symbolSize
+            twoOpinionM124.value.series[0].symbolSize = [13, 43]
+            twoOpinionM124.value.series[0].data = msV124_32Ref.value
+            curElectrodes.value[4] = eletrodeConfig['V12432']
+            break
+        default:
+            break
+    }
+}
+
 onUpdated(() => {
     myChart2DM.setOption(twoOpinionM.value)
     myChart2DL.setOption(twoOpinionL.value)
@@ -328,10 +546,10 @@ onUpdated(() => {
     myChart2DLMdt.setOption(twoOpinionLMdt.value)
     myChart2DSMdt.setOption(twoOpinionSMdt.value)
     myChartM124.setOption(twoOpinionM124.value)
-    myChart0.setOption(threeOpinionOne.value);
-    myChart1.setOption(threeOpinionL.value);
-    myChart2.setOption(threeOpinionM.value);
-    myChart3.setOption(threeOpinionS.value);
+    // myChart0.setOption(threeOpinionOne.value);
+    // myChart1.setOption(threeOpinionL.value);
+    // myChart2.setOption(threeOpinionM.value);
+    // myChart3.setOption(threeOpinionS.value);
 })
 
 var myChart2DL = null
@@ -354,10 +572,10 @@ onMounted(() => {
     myChart2DLMdt = echarts.init(document.getElementById('myChart-2d-l-mdt'));
     myChart2DSMdt = echarts.init(document.getElementById('myChart-2d-s-mdt'));
     myChartM124 = echarts.init(document.getElementById('myChart-2d-m-124'));
-    myChart0 = echarts.init(document.getElementById('myChart-0'));
-    myChart1 = echarts.init(document.getElementById('myChart-1'));
-    myChart2 = echarts.init(document.getElementById('myChart-2'));
-    myChart3 = echarts.init(document.getElementById('myChart-3'));
+    // myChart0 = echarts.init(document.getElementById('myChart-0'));
+    // myChart1 = echarts.init(document.getElementById('myChart-1'));
+    // myChart2 = echarts.init(document.getElementById('myChart-2'));
+    // myChart3 = echarts.init(document.getElementById('myChart-3'));
     myChart2DM.setOption(twoOpinionM.value)
     myChart2DL.setOption(twoOpinionL.value)
     myChart2DS.setOption(twoOpinionS.value)
@@ -365,10 +583,10 @@ onMounted(() => {
     myChart2DLMdt.setOption(twoOpinionLMdt.value)
     myChart2DSMdt.setOption(twoOpinionSMdt.value)
     myChartM124.setOption(twoOpinionM124.value)
-    myChart0.setOption(threeOpinionOne.value);
-    myChart1.setOption(threeOpinionL.value);
-    myChart2.setOption(threeOpinionM.value);
-    myChart3.setOption(threeOpinionS.value);
+    // myChart0.setOption(threeOpinionOne.value);
+    // myChart1.setOption(threeOpinionL.value);
+    // myChart2.setOption(threeOpinionM.value);
+    // myChart3.setOption(threeOpinionS.value);
 })
 
 </script>
@@ -391,5 +609,111 @@ onMounted(() => {
             margin-right: 60px;
         }
     }
+}
+
+#rounded-container-12432 {
+    box-shadow: 4px 8px 12px rgba(0, 0, 0, 0.3);
+    width: 90px;
+    height: 551.5px;
+    background-color: #e0e0e0; /* 浅灰色 */
+    border-radius: 40px; /* 四个角圆角 */
+    display: flex;
+    justify-content: space-between;
+    padding: 40px 10px 40px 10px;
+    >:first-child {
+        margin-top: 34.5px;
+    }
+    >:last-child {
+        margin-top: 34.5px;
+    }
+    .column {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 10px;
+        height: 517px; /* 列高度 */
+            .small-rect {
+                box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.25);
+                width: 10px;
+                height: 34px;
+                // background: linear-gradient(to right, #616161, #fff);
+                background-color: rgb(128, 128, 128); /* 深灰色 */
+                border-radius: 3px; 
+                border: 1px solid rgb(105, 105, 105);
+            }
+    }
+    .column:not(:last-child) {
+        margin-right: 17px;
+    }
+}
+
+
+#rounded-container-124m {
+    box-shadow: 4px 8px 12px rgba(0, 0, 0, 0.3);
+    width: 125px;
+    height: 555px;
+    background-color: #e0e0e0; /* 浅灰色背景 */
+    border-radius: 40px; /* 四个角圆角 */
+    display: flex;
+    justify-content: space-between;
+    padding: 40px 0px; /* 垂直居中 (635-555)/2=40px, 水平居中 (125-3*15-2*15)/2=25px */
+    .column-1 {
+        width: 30px;
+        height: 555px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .small-rect {
+            margin-left: 15px;
+            width: 15px;
+            height: 40px;
+            background-color: #616161; /* 深灰色 */
+            border-radius: 4px; /* 小长方形圆角 */
+            box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.25);
+        }
+    }
+    .column-2 {
+        width: 25px;
+        height: 555px;
+        display: flex;
+        flex-direction: column;
+        // justify-content: space-between;
+        padding-top: 51.5px;
+        >:nth-child(2) {
+            margin-top: 63px;
+        }
+        >:nth-child(3) {
+            margin-top: 63px;
+        }
+        >:nth-child(4) {
+            margin-top: 217.5px;
+        }
+        .small-rect {
+            margin-left: 5px;
+            width: 15px;
+            height: 40px;
+            background-color: #616161; /* 深灰色 */
+            border-radius: 4px; /* 小长方形圆角 */
+            box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.25);
+        }
+    }
+    .column-3 {
+        width: 30px;
+        height: 555px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        .small-rect {
+            margin-right: 15px;
+            width: 15px;
+            height: 40px;
+            background-color: #616161; /* 深灰色 */
+            border-radius: 4px; /* 小长方形圆角 */
+            box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.25);
+        }
+    }
+    // .column:not(:last-child) {
+    //     margin-right: 10px; /* 间距减小 */
+    // }
 }
 </style>

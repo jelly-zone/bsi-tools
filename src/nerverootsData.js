@@ -288,6 +288,42 @@ const msV124_M_2d = [
 // BSX CoverEdgeX
 const bsxCoverEdgeX_2d = []
 
+// 32通道4*8
+const msV124_32 = [
+	[1.35, 3.45],
+    [1.35, -3.45],
+    [1.35, -10.35],
+    [1.35, -17.25],
+    [1.35, -24.15],
+    [1.35, -31.05],
+    [1.35, -37.95],
+    [1.35, -44.85],
+    [4.05, 0],
+    [4.05, -6.9],
+    [4.05, -13.8],
+    [4.05, -20.7],
+    [4.05, -27.6],
+    [4.05, -34.5],
+    [4.05, -41.4],
+    [4.05, -48.3],
+	[-1.35, 3.45],
+    [-1.35, -3.45],
+    [-1.35, -10.35],
+    [-1.35, -17.25],
+    [-1.35, -24.15],
+    [-1.35, -31.05],
+    [-1.35, -37.95],
+    [-1.35, -44.85],
+    [-4.05, 0],
+    [-4.05, -6.9],
+    [-4.05, -13.8],
+    [-4.05, -20.7],
+    [-4.05, -27.6],
+    [-4.05, -34.5],
+    [-4.05, -41.4],
+    [-4.05, -48.3],
+]
+
 // 2D版M类按节段
 var nerverootsOpinionM2D = {
 	title: {
@@ -367,8 +403,8 @@ var nerverootsOpinionM2D = {
 		interval: 10,
 		type: 'value',
 		scale: true,
-		min: -70,
-		max: 5,
+		min: -75,
+		max: 10,
 		axisLabel: {
 			formatter: '{value} mm'
 		},
@@ -777,8 +813,8 @@ var nerverootsOpinionL2D = {
 		interval: 10,
 		type: 'value',
 		scale: true,
-		min: -70,
-		max: 5,
+		min: -75,
+		max: 10,
 		axisLabel: {
 			formatter: '{value} mm'
 		},
@@ -1192,8 +1228,8 @@ var nerverootsOpinionS2D = {
 		position: 'left',
 		type: 'value',
 		scale: true,
-		min: -70,
-		max: 5,
+		min: -75,
+		max: 10,
 		axisLabel: {
 			formatter: '{value} mm',
 		},
@@ -1576,8 +1612,8 @@ var nerverootsOpinion2DV124m = {
 			position: 'left',
 			type: 'value',
 			scale: true,
-			min: -70,
-			max: 5,
+			min: -75,
+			max: 10,
 			axisLabel: {
 				formatter: '{value} mm',
 			},
@@ -1938,8 +1974,8 @@ var nerverootsOpinionM2DMdt = {
 		interval: 10,
 		type: 'value',
 		scale: true,
-		min: -70,
-		max: 5,
+		min: -75,
+		max: 10,
 		axisLabel: {
 			formatter: '{value} mm'
 		},
@@ -2348,8 +2384,8 @@ var nerverootsOpinionL2DMdt = {
 		interval: 10,
 		type: 'value',
 		scale: true,
-		min: -70,
-		max: 5,
+		min: -75,
+		max: 10,
 		axisLabel: {
 			formatter: '{value} mm'
 		},
@@ -2763,8 +2799,8 @@ var nerverootsOpinionS2DMdt = {
 		position: 'left',
 		type: 'value',
 		scale: true,
-		min: -70,
-		max: 5,
+		min: -75,
+		max: 10,
 		axisLabel: {
 			formatter: '{value} mm',
 		},
@@ -5546,6 +5582,7 @@ var nerverootsOpinionS = {
 
 
 export { 
+	standardizeToMinus,
 	nerverootsOpinionMNew,
 	nerverootsOpinionLNew,
 	nerverootsOpinionSNew,
@@ -5569,5 +5606,6 @@ export {
 	nerverootsOpinionS2DMdt,
 	msV124_M_2d,
 	bsxCoverEdgeX_2d,
+	msV124_32,
 	nerverootsOpinion2DV124m
 }
