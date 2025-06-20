@@ -43,6 +43,19 @@
                         <div class="small-rect" v-for="(rect, rectIndex) in 8" :key="rectIndex"></div>
                     </div>
                 </div>
+                <div v-if="curElectrodes[4].name=='Medtronic'" id="rounded-container-medtronic">
+                    <div class="main-rectangle">
+                    <div class="column">
+                        <div v-for="i in 5" :key="'left-'+i" class="small-rectangle"></div>
+                    </div>
+                    <div style="margin-left: 10px;" class="column middle">
+                        <div v-for="i in 6" :key="'middle-'+i" class="small-rectangle"></div>
+                    </div>
+                    <div style="margin-left: 10px;" class="column">
+                        <div v-for="i in 5" :key="'right-'+i" class="small-rectangle"></div>
+                    </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="charts-col-box" style="width: 33%;">
@@ -198,7 +211,7 @@ const eletrodeConfig = {
         name: "Medtronic",
         longDis: 4.5,
         shortDis: 1,
-        contactSize: [1.5, 4],
+        contactSize: [2, 4.46],
         paddleSize: [64.2, 10],
     },
     V10L: {
@@ -224,10 +237,10 @@ const eletrodeConfig = {
     },
     V124M: {
         name: 'V1.24-M',
-        longDis: 6.3,
-        shortDis: 2.5,
-        contactSize: [1.5, 4],
-        paddleSize: [63.5, 12.5],
+        longDis: 5.84,
+        shortDis: 2,
+        contactSize: [2, 4.46],
+        paddleSize: [63.96, 12.5],
     },
     V12432: {
         name: 'V1.24-32',
@@ -281,7 +294,7 @@ const curElectrodes = ref([
         name: "Medtronic",
         longDis: 4.5,
         shortDis: 1,
-        contactSize: [1.5, 4],
+        contactSize: [2, 4.46],
         paddleSize: [64.2, 10],
     },
     {
@@ -307,17 +320,17 @@ const curElectrodes = ref([
     },
     {
         name: 'V1.24-M',
-        longDis: 6.3,
-        shortDis: 2.5,
-        contactSize: [1.5, 4],
-        paddleSize: [63.5, 12.5],
+        longDis: 5.84,
+        shortDis: 2,
+        contactSize: [2, 4.46],
+        paddleSize: [63.96, 12.5],
     },
     {
         name: 'V1.24-32',
-        longDis: 3.5,
-        shortDis: 1.7,
-        contactSize: [1, 3.4],
-        paddleSize: [63.15, 11],
+        longDis: 5.84,
+        shortDis: 2,
+        contactSize: [2, 4.46],
+        paddleSize: [63.96, 12.5],
     }
 ])
 
@@ -651,62 +664,61 @@ onMounted(() => {
 #rounded-container-124m {
     box-shadow: 4px 8px 12px rgba(0, 0, 0, 0.3);
     width: 125px;
-    height: 555px;
+    height: 559.6px;
     background-color: #e0e0e0; /* 浅灰色背景 */
     border-radius: 40px; /* 四个角圆角 */
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     padding: 40px 0px; /* 垂直居中 (635-555)/2=40px, 水平居中 (125-3*15-2*15)/2=25px */
     .column-1 {
-        width: 30px;
+        margin-left: 12.5px;
         height: 555px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         .small-rect {
-            margin-left: 15px;
-            width: 15px;
-            height: 40px;
+            width: 20px;
+            height: 44.6px;
             background-color: #616161; /* 深灰色 */
             border-radius: 4px; /* 小长方形圆角 */
             box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.25);
         }
     }
     .column-2 {
-        width: 25px;
         height: 555px;
         display: flex;
         flex-direction: column;
-        // justify-content: space-between;
         padding-top: 51.5px;
+        margin-left: 20px;
         >:nth-child(2) {
-            margin-top: 63px;
+            margin-top: 58.4px;
         }
         >:nth-child(3) {
-            margin-top: 63px;
+            margin-top: 58.4px;
         }
         >:nth-child(4) {
-            margin-top: 217.5px;
+            margin-top: 208.3px;
         }
         .small-rect {
-            margin-left: 5px;
-            width: 15px;
-            height: 40px;
+            // margin-left: 0px;
+            width: 20px;
+            height: 44.6px;
             background-color: #616161; /* 深灰色 */
             border-radius: 4px; /* 小长方形圆角 */
             box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.25);
         }
     }
     .column-3 {
-        width: 30px;
+        // width: 30px;
         height: 555px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        margin-left: 20px;
+        // margin-right: 12.5px;
         .small-rect {
-            margin-right: 15px;
-            width: 15px;
-            height: 40px;
+            width: 20px;
+            height: 44.6px;
             background-color: #616161; /* 深灰色 */
             border-radius: 4px; /* 小长方形圆角 */
             box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.25);
@@ -715,5 +727,39 @@ onMounted(() => {
     // .column:not(:last-child) {
     //     margin-right: 10px; /* 间距减小 */
     // }
+}
+
+#rounded-container-medtronic{
+    display: flex;
+    .main-rectangle {
+        box-shadow: 4px 8px 12px rgba(0, 0, 0, 0.3);
+        background-color: #e0e0e0;
+        border-radius: 40px;
+        display: flex;
+        // justify-content: space-between;
+        align-items: center;
+        padding: 0 10px 104.4px 10px;
+    }
+    .column {
+        // width: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        // gap: 10px;
+        // height: 403px;
+        // justify-content: space-evenly;
+    }
+    .small-rectangle {
+        >:first-child {
+            // margin-top: 0;
+        }
+        width: 20px;
+        height: 44.6px;
+        background-color: #616161;
+        border-radius: 4px;
+        margin-top: 45px;
+        box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.25);
+    }
 }
 </style>
